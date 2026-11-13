@@ -106,9 +106,21 @@ python -m mkdocs serve
 执行 `mkdocs build --strict` 并上传 `site/` 制品；后者在 `needs: build` 之后运行，把制品发布到
 `github-pages` 环境。
 
+首次运行实际上失败过一次：因为当时仓库的 Pages 发布来源还没切换到 GitHub Actions，
+`build` 任务在 **Configure Pages** 步骤报错，`deploy` 因 `needs: build` 被跳过。把 Pages 来源
+改为 GitHub Actions 后，我在 Actions 页面用 `Run workflow`（即 `workflow_dispatch`）手动重跑，
+`build` 与 `deploy` 均成功。
+
+- 首次成功运行：<https://github.com/sakoto505/my-docs/actions/runs/43357964317>
+
 ![Actions 首次运行](images/05-actions-first.png)
 
-> 截图⑤：首次运行记录，`build` 与 `deploy` 均为成功（绿色）。
+> 截图⑤：运行记录，`build` 与 `deploy` 均为成功（绿色）。
+
+![部署环境记录](images/04b-deployments.png)
+
+> 补充截图：仓库 Deployments（`github-pages` 环境）的发布记录。
+
 
 ### 2.6 网站访问与四页导航检查
 
@@ -130,12 +142,19 @@ python -m mkdocs serve
 提交并推送后**没有**手动点 Deploy，而是观察到本次 `push` 自动触发了新的工作流运行，成功后刷新
 网站即出现该句文字。
 
-- 对应提交：<https://github.com/sakoto505/my-docs/commits/main>
-- 对应 Actions 运行：<https://github.com/sakoto505/my-docs/actions>
+| 项 | 地址 |
+| --- | --- |
+| 对应提交 | <https://github.com/sakoto505/my-docs/commit/7fa5f4d> |
+| 对应 Actions 运行 | <https://github.com/sakoto505/my-docs/actions/runs/43359628074> |
+| 首次部署运行（手动触发） | <https://github.com/sakoto505/my-docs/actions/runs/43357964317> |
 
-![第二次运行与网站更新](images/07-second-deploy.png)
+![第二次推送触发的运行](images/07-second-run.png)
 
-> 截图⑦：第二次 push 触发的成功运行 + 网站出现新增文字（可拆为两张）。
+> 截图⑦-1：第二次 `push` 自动触发的成功运行记录。
+
+![网站出现新增文字](images/07-site-updated.png)
+
+> 截图⑦-2：刷新公开网站后出现新增文字。
 
 ## 3. 问题与解决
 
